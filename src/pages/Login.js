@@ -70,7 +70,7 @@ const Login = () => {
                 TaskWave is your all-in-one solution for conquering your to-do list with ease. From organizing your tasks to tracking progress, TaskWave empowers you to stay focused, productive
               </p>
               <p className="text-sm mt-10">
-                Don't have an account{" "}
+                Dont have an account{" "}
                 <Link
                   href="/register"
                   className="text-blue-600 font-semibold hover:underline ml-1"
