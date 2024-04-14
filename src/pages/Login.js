@@ -1,9 +1,62 @@
+import { loginUser } from '@/redux/action/user';
+import { setError } from '@/redux/sclice/user';
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const Login = () => {
+  const router = useRouter()
+  const { error, user, loading } = useSelector((e) => e.user)
+  const dispatch = useDispatch()
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
 
-  
+    if (!formData.password || !formData.email) {
+      toast.warn("Please fill all fields")
+      return;
+    }
+
+    dispatch(loginUser(formData))
+
+    setFormData({
+      username: '',
+      email: '',
+      password: ''
+    });
+  };
+
+  useEffect(() => {
+    if (user) {
+      router.push("/")
+    }
+  }, [user, handleSubmit])
+
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+      setError(null)
+    }
+  }, [error, handleSubmit])
+
+
   return (
     <div>
       <div className="font-[sans-serif] text-[#333]">
@@ -19,7 +72,7 @@ const Login = () => {
               <p className="text-sm mt-10">
                 Don't have an account{" "}
                 <Link
-                  href="/Register"
+                  href="/register"
                   className="text-blue-600 font-semibold hover:underline ml-1"
                 >
                   Register here
@@ -38,6 +91,8 @@ const Login = () => {
                   required=""
                   className="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-600"
                   placeholder="Email address"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -48,6 +103,8 @@ const Login = () => {
                   required=""
                   className="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-600"
                   placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -73,6 +130,7 @@ const Login = () => {
               </div>
               <div className="!mt-10">
                 <button
+                  onClick={handleSubmit}
                   type="button"
                   className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
                 >
@@ -153,6 +211,8 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
+
     </div>
   )
 }

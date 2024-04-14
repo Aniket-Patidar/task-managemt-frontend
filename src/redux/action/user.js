@@ -1,15 +1,19 @@
 import axios from 'axios';
-import { setLoading, setError, setToken, setStudent } from '../sclice/user';
+import { setLoading, setError, setToken, setUser } from '../sclice/user';
+const basePath = `${process.env.NEXT_PUBLIC_URl}/user`
 
 export const authenticateJWT = () => async (dispatch) => {
     try {
         dispatch(setLoading(true));
-        const { data } = await axios.post(`${basePath}/jwt`);
+        const { data } = await axios.get(`${basePath}/jwt`, {
+            headers: {
+                Authorization: `${localStorage.getItem('token')}`
+            }
+        });
         await localStorage.setItem('token', data.token);
-        dispatch(setStudent(data.user));
+        dispatch(setUser(data.user));
     } catch (error) {
-        console.error("JWT Authentication Error:", error);
-        dispatch(setError("JWT Authentication failed"));
+        // dispatch(setError("JWT Authentication failed"));
     } finally {
         dispatch(setLoading(false));
     }
@@ -20,7 +24,7 @@ export const loginUser = (userData) => async (dispatch) => {
         dispatch(setLoading(true));
         const { data } = await axios.post(`${basePath}/login`, userData);
         await localStorage.setItem('token', data.token);
-        dispatch(setStudent(data.user));
+        dispatch(setUser(data.user));
     } catch (error) {
         console.error("Login Error:", error);
         dispatch(setError(error?.response?.data?.message || "Login failed"));
@@ -30,11 +34,13 @@ export const loginUser = (userData) => async (dispatch) => {
 };
 
 export const signupUser = (userData) => async (dispatch) => {
+    console.log(userData);
     try {
         dispatch(setLoading(true));
         const { data } = await axios.post(`${basePath}/signup`, userData);
+        console.log(data);
         await localStorage.setItem('token', data.token);
-        dispatch(setStudent(data.user));
+        dispatch(setUser(data.user));
     } catch (error) {
         console.error("Signup Error:", error);
         dispatch(setError(error?.response?.data?.message || "Signup failed"));
@@ -52,8 +58,7 @@ export const logoutUser = () => async (dispatch) => {
             }
         });
         await localStorage.removeItem('token');
-        dispatch(setToken(null));
-        dispatch(setStudent(null));
+        dispatch(setUser(null));
     } catch (error) {
         console.error("Logout Error:", error);
         dispatch(setError("Logout failed"));
@@ -70,7 +75,7 @@ export const uploadAvatar = (avatarData) => async (dispatch) => {
                 Authorization: `${localStorage.getItem('token')}`
             }
         });
-        dispatch(setStudent(data.user));
+        dispatch(setUser(data.user));
     } catch (error) {
         console.error("Upload Avatar Error:", error);
         dispatch(setError(error?.response?.data?.message || "Failed to upload avatar"));

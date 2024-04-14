@@ -1,7 +1,64 @@
+import { signupUser } from '@/redux/action/user';
+import { setError } from '@/redux/sclice/user';
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Register = () => {
+  const { error, user, loading } = useSelector((e) => e.user)
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const dispatch = useDispatch()
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    if (!formData.username || !formData.password || !formData.email) {
+      toast.warn("Please fill all fields")
+      return;
+    }
+
+    dispatch(signupUser(formData))
+
+    setFormData({
+      username: '',
+      email: '',
+      password: ''
+    });
+  };
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user) {
+      router.push("/")
+    }
+  }, [user, handleSubmit])
+
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+      setError(null)
+    }
+  }, [error, handleSubmit])
 
 
   return (
@@ -19,14 +76,14 @@ const Register = () => {
               <p className="text-sm mt-10">
                 All ready have an account
                 <Link
-                  href="/Login"
+                  href="/login"
                   className="text-blue-600 font-semibold hover:underline ml-1"
                 >
                   Login
                 </Link>
               </p>
             </div>
-            <form className="space-y-6 max-w-md md:ml-auto max-md:mx-auto w-full">
+            <div className="space-y-6 max-w-md md:ml-auto max-md:mx-auto w-full">
               <h3 className="text-3xl font-extrabold mb-8 max-md:text-center">
                 Sign Up
               </h3>
@@ -35,9 +92,11 @@ const Register = () => {
                   name="username"
                   type="text"
                   autoComplete="text"
-                  required=""
+                  required="username"
                   className="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-600"
                   placeholder="username"
+                  value={formData.username}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -48,6 +107,8 @@ const Register = () => {
                   required=""
                   className="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-600"
                   placeholder="Email address"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -58,12 +119,15 @@ const Register = () => {
                   required=""
                   className="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-600"
                   placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
               </div>
 
               <div className="!mt-10">
                 <button
                   type="button"
+                  onClick={handleSubmit}
                   className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
                 >
                   Sign Up
@@ -139,10 +203,11 @@ const Register = () => {
                   </svg>
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

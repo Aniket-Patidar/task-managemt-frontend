@@ -1,48 +1,78 @@
 import Link from "next/link";
 import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const Card = () => {
+const Card = ({
+  title,
+  description,
+  status,
+  dueDate,
+  createdBy,
+  handelDelete,
+  handelEdit,
+  _id,
+  index,
+}) => {
+  const statusColors = {
+    pending: "bg-yellow-300",
+    completed: "bg-green-300",
+    inProgress: "bg-blue-300",
+  };
+
+  const getStatusColorClass = (status) => {
+    return statusColors[status] || "bg-gray-300";
+  };
+
+  const formattedDueDate = new Date(dueDate);
+
+  const displayDueDate = formattedDueDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div>
-      <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <a href="#">
-          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-        </a>
-        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          Here are the biggest enterprise technology acquisitions of 2021 so
-          far, in reverse chronological order.
+      <div class="max-w-sm p-6 h-fit min-w-[300px] bg-white border  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+        <p
+          className={`px-2 py-1 rounded-lg font-semibold w-fit text-black text-[10px] ${getStatusColorClass(
+            status
+          )}`}
+        >
+          {status}
+        </p>
+        <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+          {title}
+        </h5>
+        <p className="mb-2 font-normal text-sm text-gray-700 dark:text-gray-400 whitespace-normal">
+          {description}
+        </p>
+
+        <p class="mb-2 font-normal text-sm text-gray-700 dark:text-gray-400">
+          Due Date: {displayDueDate}
         </p>
 
         <div class="flex space-x-2">
-          <Link
-            href="/Details/5"
-            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          <div
+            onClick={() =>
+              handelEdit({
+                title,
+                description,
+                status,
+                dueDate,
+                createdBy,
+                _id,
+              })
+            }
+            class="inline-flex cursor-pointer items-center px-2 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Read more
-            <svg
-              class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 10"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M1 5h12m0 0L9 1m4 4L9 9"
-              />
-            </svg>
-          </Link>
-          <a
-            href="#"
-            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            Edit
+          </div>
+          <div
+            onClick={() => handelDelete(_id, index)}
+            class="inline-flex cursor-pointer items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <RiDeleteBin6Line />
-          </a>
+          </div>
         </div>
       </div>
     </div>
