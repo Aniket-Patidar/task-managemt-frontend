@@ -20,6 +20,6 @@ This is the frontend part of the Task Management application. It provides a user
 - **Tailwind CSS:** Utility-first CSS framework for styling.
 
 ## Getting Started
-
+--** clone repo
 - ** npm i 
 - ** npm run dev
