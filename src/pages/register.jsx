@@ -51,13 +51,13 @@ const Register = () => {
     }
   }, [user, handleSubmit])
 
-
+  const [isToastShown, setIsToastShown] = useState(false);
   useEffect(() => {
-    if (error) {
-      toast.error(error)
-      setError(null)
+    if (error && !isToastShown) {
+      toast.error(error);
+      setIsToastShown(true);
     }
-  }, [error, handleSubmit])
+  }, [error, handleSubmit, isToastShown]);
 
 
   return (
