@@ -28,7 +28,6 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     if (!formData.username || !formData.password || !formData.email) {
       toast.warn("Please fill all fields")

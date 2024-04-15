@@ -1,8 +1,9 @@
-import { setError, setLoading, setTasks } from "../sclice/task";
+import { setError, setLoading, setPaginationData, setTasks } from "../sclice/task";
 import axios from 'axios';
 const basePath = `${process.env.NEXT_PUBLIC_URl}/task`
 
 export const fetchAllTasks = (searchText, page = 1, limit = 10) => async (dispatch) => {
+
     try {
         dispatch(setLoading(true));
         const { data } = await axios.get(`${basePath}`, {
@@ -16,7 +17,12 @@ export const fetchAllTasks = (searchText, page = 1, limit = 10) => async (dispat
             }
         });
         dispatch(setTasks(data.tasks));
+        const {totalPages, currentPage, totalCount} = data;
+        dispatch(setPaginationData({ totalPages, currentPage, totalCount }))
+        dispatch(setLoading(false));
+
     } catch (error) {
+        dispatch(setLoading(false));
         dispatch(setError(error.message));
     }
 };

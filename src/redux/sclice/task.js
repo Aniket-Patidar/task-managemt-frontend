@@ -5,6 +5,9 @@ const initialState = {
     task: {},
     loading: false,
     error: null,
+    paginationData: {
+        
+    }
 };
 
 
@@ -12,14 +15,18 @@ const taskSlice = createSlice({
     name: 'task',
     initialState,
     reducers: {
-
         setTasks: (state, action) => {
             state.tasks = action.payload;
             state.loading = false;
             state.error = null;
         },
-        setTask: (state, action) => {
-            state.task = action.payload;
+        setTasks: (state, action) => {
+            state.tasks = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+        setPaginationData: (state, action) => {
+            state.paginationData = action.payload;
             state.loading = false;
             state.error = null;
         },
@@ -35,6 +42,6 @@ const taskSlice = createSlice({
 });
 
 
-export const { setTasks, setLoading, setError } = taskSlice.actions;
+export const { setTasks, setLoading, setError,setPaginationData } = taskSlice.actions;
 
 export default taskSlice.reducer;

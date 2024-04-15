@@ -34,11 +34,9 @@ export const loginUser = (userData) => async (dispatch) => {
 };
 
 export const signupUser = (userData) => async (dispatch) => {
-    console.log(userData);
     try {
         dispatch(setLoading(true));
         const { data } = await axios.post(`${basePath}/signup`, userData);
-        console.log(data);
         await localStorage.setItem('token', data.token);
         dispatch(setUser(data.user));
     } catch (error) {
@@ -112,7 +110,6 @@ export const forgotPassword = (emailData) => async (dispatch) => {
                 Authorization: `${localStorage.getItem('token')}`
             }
         });
-        console.log("Forgot Password Success:", data.message);
     } catch (error) {
         console.error("Forgot Password Error:", error);
         dispatch(setError(error?.response?.data?.message || "Forgot password failed"));

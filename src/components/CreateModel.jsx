@@ -20,7 +20,6 @@ const TaskModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     setFormData({
       title: "",
       description: "",

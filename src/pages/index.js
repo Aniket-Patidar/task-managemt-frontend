@@ -10,15 +10,39 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import animationData from '../../public/g1.json'; // Import your JSON animation
+import Pagination from '@/components/Paggination';
 
 const Index = () => {
 
   const { user, loading } = useSelector((state) => state.user);
   const router = useRouter()
+  const dispatch = useDispatch()
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState()
 
-  const dispatch = useDispatch()
+  const { tasks, loading: l2 ,paginationData} = useSelector((e) => e.task)
+
+  console.log(paginationData);
+
+  useEffect(() => {
+    if (paginationData) {
+      setTotalPages(paginationData.totalPages);
+      setCurrentPage(paginationData.currentPage);
+    }
+  }, [tasks]);
+
+
+  useEffect(() => {
+    dispatch(fetchAllTasks("", parseInt(currentPage)));
+  }, [currentPage]);
+
+
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   React.useEffect(() => {
     dispatch(authenticateJWT())
@@ -29,12 +53,14 @@ const Index = () => {
 
 
   const handelSearch = () => {
-    if (search != '')
-      dispatch(fetchAllTasks(search))
+    if (search.trim() !== '') {
+      setCurrentPage(1);
+      dispatch(fetchAllTasks(search, 1));
+    }
   }
 
 
-  const { tasks, loading: l2 } = useSelector((e) => e.task)
+
   useEffect(() => {
     dispatch(fetchAllTasks())
   }, [])
@@ -53,9 +79,9 @@ const Index = () => {
 
   return (
     <div className='bg-gray-100 min-h-screen'>
-      {loading ? <>Loading</> :
+      <Navbar ></Navbar>
+      {loading ? <>Loading....</> :
         <div >
-          <Navbar ></Navbar>
           <EditModel editData={editData} setEditData={setEditData} isOpen={isOpen} onClose={onClose} ></EditModel>
           <div class="flex items-center max-w-sm mx-auto">
             <label for="simple-search" class="sr-only">
@@ -113,21 +139,28 @@ const Index = () => {
             </button>
           </div>
 
-          <div className="px-[20px] py-[20px] flex flex-wrap justify-center gap-5 ">
-            {l2 ? <>
-              Loading...
-            </> : tasks.map((e, index) => {
-              return <Card {...e} key={index} index={index} handelDelete={handelDelete} handelEdit={handelEdit}></Card>
-            })}
+          <div className=''>
+            <div className="px-[20px] py-[20px] flex flex-wrap justify-center gap-5 ">
+              {l2 ? <>
+                Loading...
+              </> : tasks.map((e, index) => {
+                return <Card {...e} key={index} index={index} handelDelete={handelDelete} handelEdit={handelEdit}></Card>
+              })}
+            </div>
           </div>
+
           <div className='flex items-center justify-center '>
             {!loading && !l2 && tasks.length == 0 && <Lottie className=' md:w-[30vw] w-[50vw]' animationData={animationData} />}
           </div>
-        </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
 
+        </div>
       }
     </div>
-
   )
 }
 
