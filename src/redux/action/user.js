@@ -67,6 +67,26 @@ export const logoutUser = () => async (dispatch) => {
     }
 };
 
+export const updateProfile = (fileData) => async (dispatch) => {
+    try {
+        dispatch(setLoading(true));
+        const formData = new FormData();
+        formData.append('avatar', fileData);
+        const { data } = await axios.post(`${basePath}/update-profile`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `${localStorage.getItem('token')}`
+            }
+        });
+        dispatch(setUser(data.user));
+    } catch (error) {
+        console.error("upload image:", error);
+        dispatch(setError(error?.response?.data?.message || "profile update failed"));
+    } finally {
+        dispatch(setLoading(false));
+    }
+};
+
 export const uploadAvatar = (avatarData) => async (dispatch) => {
     try {
         dispatch(setLoading(true));

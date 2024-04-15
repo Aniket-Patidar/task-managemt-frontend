@@ -52,7 +52,7 @@ const Index = () => {
   }
 
   return (
-    <>
+    <div className='bg-gray-100 min-h-screen'>
       {loading ? <>Loading</> :
         <div >
           <Navbar ></Navbar>
@@ -126,7 +126,7 @@ const Index = () => {
         </div>
 
       }
-    </>
+    </div>
 
   )
 }
