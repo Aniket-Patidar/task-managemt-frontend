@@ -22,7 +22,7 @@ const Index = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState()
 
-  const { tasks, loading: l2 ,paginationData} = useSelector((e) => e.task)
+  const { tasks, loading: l2, paginationData } = useSelector((e) => e.task)
 
   console.log(paginationData);
 

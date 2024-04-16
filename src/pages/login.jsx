@@ -1,49 +1,48 @@
-import { loginUser } from '@/redux/action/user';
-import { setError } from '@/redux/sclice/user';
-import Link from 'next/link'
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from "@/redux/action/user";
+import { setError } from "@/redux/sclice/user";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
-  const router = useRouter()
-  const { error, user, loading } = useSelector((e) => e.user)
-  const dispatch = useDispatch()
+  const router = useRouter();
+  const { error, user, loading } = useSelector((e) => e.user);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!formData.password || !formData.email) {
-      toast.warn("Please fill all fields")
+      toast.warn("Please fill all fields");
       return;
     }
 
-    dispatch(loginUser(formData))
+    dispatch(loginUser(formData));
 
     setFormData({
-      username: '',
-      email: '',
-      password: ''
+      username: "",
+      email: "",
+      password: "",
     });
   };
 
   useEffect(() => {
     if (user) {
-      router.push("/")
+      router.push("/");
     }
-  }, [user, handleSubmit])
-
+  }, [user, handleSubmit]);
 
   const [isToastShown, setIsToastShown] = useState(false);
 
@@ -52,8 +51,7 @@ const Login = () => {
       toast.error(error);
       setIsToastShown(true);
     }
-  }, [error, handleSubmit])
-
+  }, [error, handleSubmit]);
 
   return (
     <div>
@@ -65,7 +63,9 @@ const Login = () => {
                 Your Ultimate Task Management
               </h2>
               <p className="text-sm mt-6">
-                TaskWave is your all-in-one solution for conquering your to-do list with ease. From organizing your tasks to tracking progress, TaskWave empowers you to stay focused, productive
+                TaskWave is your all-in-one solution for conquering your to-do
+                list with ease. From organizing your tasks to tracking progress,
+                TaskWave empowers you to stay focused, productive
               </p>
               <p className="text-sm mt-10">
                 Dont have an account{" "}
@@ -118,12 +118,12 @@ const Login = () => {
                   </label>
                 </div>
                 <div className="text-sm">
-                  <a
-                    href="jajvascript:void(0);"
+                  <Link
+                    href={"/sendMail"}
                     className="text-blue-600 hover:text-blue-500"
                   >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="!mt-10">
@@ -210,9 +210,8 @@ const Login = () => {
         </div>
       </div>
       <ToastContainer />
-
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
